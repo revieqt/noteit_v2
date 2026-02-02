@@ -1,0 +1,47 @@
+# ======================
+# Environment variables
+# ======================
+.env
+.env.*
+
+# ======================
+# Node / Next.js
+# ======================
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+# ======================
+# Python / Django
+# ======================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env.local
+
+# ======================
+# Django specific
+# ======================
+db.sqlite3
+staticfiles/
+media/
+
+# ======================
+# Docker
+# ======================
+*.log
+docker-data/
+
+# ======================
+# OS / Editor
+# ======================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
