@@ -1,7 +1,6 @@
-// API helper for Django REST API calls
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const API_BASE_URL = "http://localhost:8000/api";
+// process.env.NEXT_PUBLIC_API_URL || 
 
-// Get or create unique device identifier
 function getDeviceId(): string {
   if (typeof window === "undefined") {
     return "";
@@ -9,7 +8,6 @@ function getDeviceId(): string {
 
   let deviceId = localStorage.getItem("deviceId");
   if (!deviceId) {
-    // Generate a unique device ID using UUID v4
     deviceId = "device_" + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
     localStorage.setItem("deviceId", deviceId);
   }
@@ -79,15 +77,15 @@ export async function viewNote(noteId: number): Promise<NoteWithTodos> {
   }
 }
 
-// 3. Create a new note
 export async function createNote(
   title: string,
   content: string,
+  todos: Todo[] = [],
   isFavorite: boolean = false
-): Promise<Note> {
+): Promise<NoteWithTodos> {
   try {
     const deviceId = getDeviceId();
-    const response = await fetch(`${API_BASE_URL}/notes/`, {
+    const response = await fetch(`${API_BASE_URL}/notes/create/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,6 +95,7 @@ export async function createNote(
         title,
         content,
         isFavorite,
+        todos,
       }),
     });
 
@@ -116,10 +115,11 @@ export async function updateNote(
   noteId: number,
   title: string,
   content: string,
-  isFavorite: boolean
-): Promise<Note> {
+  isFavorite: boolean,
+  todos: Todo[] = []
+): Promise<NoteWithTodos> {
   try {
-    const response = await fetch(`${API_BASE_URL}/notes/${noteId}/`, {
+    const response = await fetch(`${API_BASE_URL}/notes/${noteId}/update/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -128,6 +128,7 @@ export async function updateNote(
         title,
         content,
         isFavorite,
+        todos,
       }),
     });
 
@@ -145,7 +146,7 @@ export async function updateNote(
 // 5. Delete a note
 export async function deleteNote(noteId: number): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE_URL}/notes/${noteId}/`, {
+    const response = await fetch(`${API_BASE_URL}/notes/${noteId}/delete/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -164,7 +165,7 @@ export async function deleteNote(noteId: number): Promise<void> {
 // 6. Update favorite status
 export async function updateFavorite(noteId: number, isFavorite: boolean): Promise<Note> {
   try {
-    const response = await fetch(`${API_BASE_URL}/notes/${noteId}/`, {
+    const response = await fetch(`${API_BASE_URL}/notes/${noteId}/favorite/`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

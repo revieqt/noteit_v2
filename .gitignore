@@ -3,6 +3,8 @@
 # ======================
 .env
 .env.*
+.env.local
+.env.*.local
 
 # ======================
 # Node / Next.js
@@ -13,6 +15,9 @@ out/
 npm-debug.log*
 yarn.lock
 pnpm-lock.yaml
+.turbo/
+dist/
+build/
 
 # ======================
 # Python / Django
@@ -23,7 +28,11 @@ __pycache__/
 *.pyd
 .venv/
 venv/
-.env.local
+ENV/
+env/
+*.egg-info/
+dist/
+build/
 
 # ======================
 # Django specific
@@ -31,17 +40,57 @@ venv/
 db.sqlite3
 staticfiles/
 media/
+*.db
+*.sqlite
+*.sqlite3
 
 # ======================
 # Docker
 # ======================
 *.log
 docker-data/
+.docker/
 
 # ======================
-# OS / Editor
+# IDE / Editor
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# ======================
+# OS specific
 # ======================
 .DS_Store
 Thumbs.db
-.vscode/
-.idea/
+Desktop.ini
+.directory
+
+# ======================
+# Package managers
+# ======================
+yarn-error.log
+npm-error.log
+pnpm-error.log
+
+# ======================
+# Testing
+# ======================
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ======================
+# MacOS
+# ======================
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes

@@ -17,7 +17,7 @@ const GlassmorphicButton: React.FC<GlassmorphicButtonProps> = ({
 }) => {
   const baseClasses = `
     text-white
-    bg-white/30
+    bg-white/10
     backdrop-blur-md
     border border-white/20
     focus:outline-none focus:ring-4 focus:ring-white/30

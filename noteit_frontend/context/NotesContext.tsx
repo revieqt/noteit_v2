@@ -11,8 +11,8 @@ interface NotesContextType {
   error: string | null;
   getAllNotes: () => Promise<void>;
   viewNote: (noteId: number) => Promise<void>;
-  createNote: (title: string, content: string) => Promise<Note>;
-  updateNote: (noteId: number, title: string, content: string, isFavorite: boolean) => Promise<Note>;
+  createNote: (title: string, content: string, todos?: Todo[], isFavorite?: boolean) => Promise<NoteWithTodos>;
+  updateNote: (noteId: number, title: string, content: string, isFavorite: boolean, todos?: Todo[]) => Promise<NoteWithTodos>;
   deleteNote: (noteId: number) => Promise<void>;
   updateFavorite: (noteId: number, isFavorite: boolean) => Promise<Note>;
   clearCurrentNote: () => void;
@@ -56,11 +56,11 @@ export function NotesProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const createNote = useCallback(
-    async (title: string, content: string): Promise<Note> => {
+    async (title: string, content: string, todos: Todo[] = [], isFavorite: boolean = false): Promise<NoteWithTodos> => {
       setLoading(true);
       setError(null);
       try {
-        const newNote = await api.createNote(title, content);
+        const newNote = await api.createNote(title, content, todos, isFavorite);
         setNotes((prevNotes) => [...prevNotes, newNote]);
         return newNote;
       } catch (err) {
@@ -75,11 +75,11 @@ export function NotesProvider({ children }: { children: ReactNode }) {
   );
 
   const updateNote = useCallback(
-    async (noteId: number, title: string, content: string, isFavorite: boolean): Promise<Note> => {
+    async (noteId: number, title: string, content: string, isFavorite: boolean, todos: Todo[] = []): Promise<NoteWithTodos> => {
       setLoading(true);
       setError(null);
       try {
-        const updatedNote = await api.updateNote(noteId, title, content, isFavorite);
+        const updatedNote = await api.updateNote(noteId, title, content, isFavorite, todos);
         setNotes((prevNotes) =>
           prevNotes.map((note) => (note.id === noteId ? updatedNote : note))
         );

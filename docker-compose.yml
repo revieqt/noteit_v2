@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: ./noteit_frontend
+    container_name: dev-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./noteit_frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+
+  backend:
+    build: ./noteit_backend
+    container_name: dev-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./noteit_backend:/app
+    environment:
+      - DEBUG=1
+      - DB_HOST=mysql
+      - DB_NAME=practice_db
+      - DB_USER=root
+      - DB_PASSWORD=root
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: dev-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: practice_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
