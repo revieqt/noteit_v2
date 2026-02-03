@@ -23,13 +23,7 @@ export default function Home() {
     await viewNote(noteId);
     setShowNoteView(true);
   };
-
-  const handleEdit = async (noteId: number) => {
-    await viewNote(noteId);
-    setEditingNoteId(noteId);
-    setShowNoteForm(true);
-  };
-
+  
   const handleCreateNew = () => {
     setEditingNoteId(undefined);
     setShowNoteForm(true);

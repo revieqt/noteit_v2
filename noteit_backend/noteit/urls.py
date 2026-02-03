@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Notes endpoints
     path('notes/', views.get_all_notes, name='get_all_notes'),
     path('notes/<int:noteId>/', views.view_note, name='view_note'),
     path('notes/create/', views.create_note, name='create_note'),

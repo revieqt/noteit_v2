@@ -34,7 +34,6 @@ export interface NoteWithTodos extends Note {
   todos?: Todo[];
 }
 
-// 1. Get all notes for the device
 export async function getAllNotes(): Promise<Note[]> {
   try {
     const deviceId = getDeviceId();
@@ -56,7 +55,6 @@ export async function getAllNotes(): Promise<Note[]> {
   }
 }
 
-// 2. Get note details including todos
 export async function viewNote(noteId: number): Promise<NoteWithTodos> {
   try {
     const response = await fetch(`${API_BASE_URL}/notes/${noteId}/`, {
@@ -110,7 +108,6 @@ export async function createNote(
   }
 }
 
-// 4. Update a note
 export async function updateNote(
   noteId: number,
   title: string,
@@ -143,7 +140,6 @@ export async function updateNote(
   }
 }
 
-// 5. Delete a note
 export async function deleteNote(noteId: number): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/notes/${noteId}/delete/`, {
@@ -162,7 +158,6 @@ export async function deleteNote(noteId: number): Promise<void> {
   }
 }
 
-// 6. Update favorite status
 export async function updateFavorite(noteId: number, isFavorite: boolean): Promise<Note> {
   try {
     const response = await fetch(`${API_BASE_URL}/notes/${noteId}/favorite/`, {

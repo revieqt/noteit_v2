@@ -6,7 +6,6 @@ from .models import Note, Todo
 from .serializers import NoteSerializer, NoteWithTodosSerializer, TodoSerializer
 
 
-# 1. Get all notes for a device
 @api_view(['GET'])
 def get_all_notes(request):
     """
@@ -26,7 +25,6 @@ def get_all_notes(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# 2. Get note details including todos
 @api_view(['GET'])
 def view_note(request, noteId):
     """
@@ -45,7 +43,6 @@ def view_note(request, noteId):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# 3. Create a new note
 @api_view(['POST'])
 def create_note(request):
     """
@@ -55,12 +52,10 @@ def create_note(request):
     data = request.data
     todos_data = data.pop('todos', [])
     
-    # Create the note
     serializer = NoteSerializer(data=data)
     if serializer.is_valid():
         note = serializer.save()
         
-        # Create associated todos
         for todo_data in todos_data:
             Todo.objects.create(
                 noteId=note,
@@ -68,14 +63,12 @@ def create_note(request):
                 completed=todo_data.get('completed', False)
             )
         
-        # Return the created note with todos
         response_serializer = NoteWithTodosSerializer(note)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# 4. Update a note
 @api_view(['PUT'])
 def update_note(request, noteId):
     """
@@ -93,17 +86,13 @@ def update_note(request, noteId):
     data = request.data
     todos_data = data.pop('todos', None)
     
-    # Update note fields
     serializer = NoteSerializer(note, data=data, partial=True)
     if serializer.is_valid():
         note = serializer.save()
         
-        # Update todos if provided
         if todos_data is not None:
-            # Delete existing todos
             Todo.objects.filter(noteId=note).delete()
             
-            # Create new todos
             for todo_data in todos_data:
                 Todo.objects.create(
                     noteId=note,
@@ -117,7 +106,6 @@ def update_note(request, noteId):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# 5. Delete a note
 @api_view(['DELETE'])
 def delete_note(request, noteId):
     """
@@ -139,7 +127,6 @@ def delete_note(request, noteId):
     )
 
 
-# 6. Update favorite status
 @api_view(['PATCH'])
 def update_favorite(request, noteId):
     """
