@@ -3,6 +3,7 @@
 import React, { ReactNode, useState, useEffect } from "react";
 import { useNotes } from "@/context/NotesContext";
 import type { NoteWithTodos, Todo } from "@/utils/api";
+import { MdFormatListBulletedAdd, MdCheck} from "react-icons/md";
 
 interface TodoItem {
   id: number;
@@ -87,11 +88,9 @@ const NoteForm: React.FC<NoteFormProps> = ({ children, onClose, noteId }) => {
       if (noteId && currentNote) {
         await updateNote(noteId, title, content, currentNote.isFavorite, todos as Todo[]);
       } else {
-        // Create new note
         await createNote(title, content, todos as Todo[]);
       }
 
-      // Close form
       onClose?.();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to save note";
@@ -104,29 +103,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ children, onClose, noteId }) => {
   return (
     <div className="fixed top-0 left-0 w-full h-full z-100 bg-white/10 backdrop-blur-md flex justify-center p-6">
       <div className="p-5 h-auto min-h-[95vh] max-w-2xl w-full bg-white rounded-lg shadow-md flex flex-col overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">
-            {noteId ? "Edit Note" : "Create New Note"}
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
-          </button>
-        </div>
+
 
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
           <div className="flex-1 overflow-y-auto">
@@ -136,15 +113,36 @@ const NoteForm: React.FC<NoteFormProps> = ({ children, onClose, noteId }) => {
               </div>
             )}
 
-            <input
-              type="text"
-              id="title"
-              placeholder="Enter note title..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-3 mb-5 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              required
-            />
+            <div className="flex justify-between items-center">
+              <input
+                type="text"
+                id="title"
+                placeholder="Enter note title..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full py-3 mb-5 rounded-lg placeholder-slate-400 focus:outline-none text-3xl font-bold text-slate-900"
+                required
+              />
+              <button
+                onClick={onClose}
+                className="text-gray-500 hover:text-gray-700 transition mt-[-30px]"
+              >
+                <svg
+                  className="w-7 h-7"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+            
             <textarea
               id="content"
               placeholder="Enter note content..."
@@ -156,10 +154,9 @@ const NoteForm: React.FC<NoteFormProps> = ({ children, onClose, noteId }) => {
             />
 
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-slate-700 mb-3">Todo Items</h3>
               <div className="space-y-3">
                 {todos.map((todo) => (
-                  <div key={todo.id} className="flex items-center gap-3">
+                  <div key={todo.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                     <input
                       type="checkbox"
                       checked={todo.completed}
@@ -171,12 +168,12 @@ const NoteForm: React.FC<NoteFormProps> = ({ children, onClose, noteId }) => {
                       placeholder="Enter todo item..."
                       value={todo.title}
                       onChange={(e) => handleTodoTitleChange(todo.id, e.target.value)}
-                      className="flex-1 px-4 py-2 rounded border border-slate-300 bg-white text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                      className="flex-1 px-2 rounded text-slate-900 placeholder-slate-400 transition focus:outline-none"
                     />
                     <button
                       type="button"
                       onClick={() => handleDeleteTodo(todo.id)}
-                      className="p-2 text-red-500 hover:bg-red-50 rounded transition"
+                      className="text-red-500 hover:bg-red-50 rounded transition"
                     >
                       <svg
                         className="w-5 h-5"
@@ -198,20 +195,20 @@ const NoteForm: React.FC<NoteFormProps> = ({ children, onClose, noteId }) => {
             </div>
           </div>
 
-          <div className="flex gap-2 pt-3 mt-auto border-t">
+          <div className="flex gap-2 pt-3 mt-auto justify-end">
             <button
               type="button"
               onClick={handleAddTodo}
-              className="px-4 py-3 rounded-lg border border-gray-400 bg-white text-gray-700 font-medium transition hover:bg-gray-50"
+              className="p-3 rounded-full transition hover:bg-blue-600 hover:text-white"
             >
-              + Add Todo Item
+              <MdFormatListBulletedAdd className="w-7 h-7" />
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 px-6 py-3 rounded-lg bg-teal-500 text-white font-medium transition hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-3 rounded-full transition hover:bg-teal-600 hover:text-white"
             >
-              {isLoading ? "Saving..." : noteId ? "Update Note" : "Create Note"}
+              <MdCheck className="w-7 h-7" />
             </button>
           </div>
         </form>
